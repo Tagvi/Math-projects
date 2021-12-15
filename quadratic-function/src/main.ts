@@ -12,6 +12,7 @@ scene.add(camera);
 camera.position.z = -100;
 const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enabled = true;
@@ -26,12 +27,6 @@ function getRandomColor() {
   return color;
 }
 
-function tick() {
-  renderer.render(scene, camera);
-  window.requestAnimationFrame(tick);
-  controls.update();
-}
-tick();
 const form = document.querySelector('form')!;
 form.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -47,3 +42,14 @@ form.addEventListener('submit', (e) => {
   }
   form.remove();
 });
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.updateProjectionMatrix();
+});
+function tick() {
+  renderer.render(scene, camera);
+  window.requestAnimationFrame(tick);
+  controls.update();
+}
+tick();
